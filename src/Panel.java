@@ -1,6 +1,9 @@
 import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.layout.mxOrganicLayout;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxUtils;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.ListenableUndirectedGraph;
@@ -47,6 +50,7 @@ public class Panel extends JPanel implements ActionListener {
     private mxIGraphLayout layout;
     private JGraphXAdapter<String, MyEdge> graphAdapter;
     private mxGraphComponent component;
+    private mxGraphModel graphModel;
 
     public Panel(Dimension dim) {
 
@@ -59,6 +63,8 @@ public class Panel extends JPanel implements ActionListener {
         layout.execute(graphAdapter.getDefaultParent());
 
         component = new mxGraphComponent(graphAdapter);
+
+        graphModel = (mxGraphModel) component.getGraph().getModel();
 
         component.setPreferredSize(new Dimension(dim.width - 50, dim.height - 200));
 
@@ -280,6 +286,9 @@ public class Panel extends JPanel implements ActionListener {
                     g.addVertex(b);
                     g.addEdge(a, b);
                 }
+                Collection<Object> cells = graphModel.getCells().values();
+                mxUtils.setCellStyles(component.getGraph().getModel(),
+                        cells.toArray(), mxConstants.STYLE_ENDARROW, mxConstants.NONE);
                 layout.execute(graphAdapter.getDefaultParent());
             }
         }
